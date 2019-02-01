@@ -1,0 +1,328 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.micropro.SpringBoot1.Models;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+/**
+ *
+ * @author cdharmik
+ */
+@Entity
+@Table(name = "ad_user_mst")
+@NamedQueries({
+    @NamedQuery(name = "AdUserMst.findAll", query = "SELECT a FROM AdUserMst a")
+    , @NamedQuery(name = "AdUserMst.findByOrgid", query = "SELECT a FROM AdUserMst a WHERE a.orgid = :orgid")
+    , @NamedQuery(name = "AdUserMst.findById", query = "SELECT a FROM AdUserMst a WHERE a.id = :id")
+    , @NamedQuery(name = "AdUserMst.findByCode", query = "SELECT a FROM AdUserMst a WHERE a.code = :code")
+    , @NamedQuery(name = "AdUserMst.findByName", query = "SELECT a FROM AdUserMst a WHERE a.name = :name")
+    , @NamedQuery(name = "AdUserMst.findByPassword", query = "SELECT a FROM AdUserMst a WHERE a.password = :password")
+    , @NamedQuery(name = "AdUserMst.findByDefunct", query = "SELECT a FROM AdUserMst a WHERE a.defunct = :defunct")
+    , @NamedQuery(name = "AdUserMst.findByChangePwd", query = "SELECT a FROM AdUserMst a WHERE a.changePwd = :changePwd")
+    , @NamedQuery(name = "AdUserMst.findByLastPwdDt", query = "SELECT a FROM AdUserMst a WHERE a.lastPwdDt = :lastPwdDt")
+    , @NamedQuery(name = "AdUserMst.findByLastLoginDt", query = "SELECT a FROM AdUserMst a WHERE a.lastLoginDt = :lastLoginDt")
+    , @NamedQuery(name = "AdUserMst.findByLastLoginIp", query = "SELECT a FROM AdUserMst a WHERE a.lastLoginIp = :lastLoginIp")
+    , @NamedQuery(name = "AdUserMst.findByCreatedOn", query = "SELECT a FROM AdUserMst a WHERE a.createdOn = :createdOn")
+    , @NamedQuery(name = "AdUserMst.findByCreatedBy", query = "SELECT a FROM AdUserMst a WHERE a.createdBy = :createdBy")
+    , @NamedQuery(name = "AdUserMst.findByUpdatedOn", query = "SELECT a FROM AdUserMst a WHERE a.updatedOn = :updatedOn")
+    , @NamedQuery(name = "AdUserMst.findByUpdatedBy", query = "SELECT a FROM AdUserMst a WHERE a.updatedBy = :updatedBy")
+    , @NamedQuery(name = "AdUserMst.findByVersionId", query = "SELECT a FROM AdUserMst a WHERE a.versionId = :versionId")})
+public class AdUserMst implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "orgid")
+    @JsonIgnore
+    private long orgid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "code")
+    private String code;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "name")
+    private String name;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "password")
+    private String password;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "defunct")
+    private Character defunct;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "change_pwd")
+    private Character changePwd;
+    @Column(name = "last_pwd_dt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastPwdDt;
+    @Column(name = "last_login_dt")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
+    private Date lastLoginDt;
+    @Size(max = 100)
+    @Column(name = "last_login_ip")
+    @JsonIgnore
+    private String lastLoginIp;
+    @Basic(optional = false)
+    @NotNull    
+    @Column(name = "created_on")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
+    private Date createdOn;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "created_by")
+    @JsonIgnore
+    private long createdBy;
+    @Column(name = "updated_on")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
+    private Date updatedOn;
+    @Column(name = "updated_by")
+    @JsonIgnore
+    private BigInteger updatedBy;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "version_id")
+    @JsonIgnore
+    private long versionId;
+    
+    @PrePersist
+    protected void preCreate() {
+        this.createdOn = new Date();
+        this.versionId = 0;
+        this.orgid = 1;
+    }    
+    
+    @PreUpdate
+    protected void preUpdate() {
+        this.updatedOn = new Date();
+        this.versionId +=1;
+    }
+    
+    public AdUserMst() {
+    }
+
+    public AdUserMst(Long id) {
+        this.id = id;
+    }
+
+    public AdUserMst(Long id, long orgid, String code, String name, String password, Character defunct, Character changePwd, Date createdOn, long createdBy, long versionId) {
+        this.id = id;
+        this.orgid = orgid;
+        this.code = code;
+        this.name = name;
+        this.password = password;
+        this.defunct = defunct;
+        this.changePwd = changePwd;
+        this.createdOn = createdOn;
+        this.createdBy = createdBy;
+        this.versionId = versionId;
+    }
+
+    public long getOrgid() {
+        return orgid;
+    }
+
+    public void setOrgid(long orgid) {
+        this.orgid = orgid;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Character getDefunct() {
+        return defunct;
+    }
+
+    public void setDefunct(Character defunct) {
+        this.defunct = defunct;
+    }
+
+    public Character getChangePwd() {
+        return changePwd;
+    }
+
+    public void setChangePwd(Character changePwd) {
+        this.changePwd = changePwd;
+    }
+
+    public Date getLastPwdDt() {
+        return lastPwdDt;
+    }
+
+    public void setLastPwdDt(Date lastPwdDt) {
+        this.lastPwdDt = lastPwdDt;
+    }
+
+    public Date getLastLoginDt() {
+        return lastLoginDt;
+    }
+
+    public void setLastLoginDt(Date lastLoginDt) {
+        this.lastLoginDt = lastLoginDt;
+    }
+
+    public String getLastLoginIp() {
+        return lastLoginIp;
+    }
+
+    public void setLastLoginIp(String lastLoginIp) {
+        this.lastLoginIp = lastLoginIp;
+    }
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
+    public BigInteger getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(BigInteger updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public long getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(long versionId) {
+        this.versionId = versionId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof AdUserMst)) {
+            return false;
+        }
+        AdUserMst other = (AdUserMst) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.micropro.SpringBoot1.Models.AdUserMst[ id=" + id + " ]";
+    }
+    
+}
+
+
+
+=================================================================================================================
+
+{
+        "id": 1,
+        "code": "ADMIN",
+        "name": "ADMIN",
+        "password": "password",
+        "defunct": "N",
+        "changePwd": "N",
+        "lastPwdDt": null
+    }
+
+===============================================================================================================================
+Get URL:
+http://localhost:8085/micropro/getLoc
+
+PUT URL:
+http://localhost:8085/micropro/updateUsr/3
+
+POST URL:
+http://localhost:8085/micropro/InsertLoc
+
+DELETE URL:
+http://localhost:8085/micropro/deleteUsr/8
